@@ -1,0 +1,170 @@
+<html>
+<head><title>Web Reader For Hacker News</title>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
+<script>
+
+	var word,author;
+	//$(".mypanel").html("Loading...");
+	function search()
+	{
+		$(".mypanel").html("Loading...");
+		console.log('getting json')	
+		$.getJSON('http://localhost:3000/search_word', function(data){
+				console.log(data)
+				var text ="";
+ 	 	for(i=0;i<data.hits.length;i++)
+ 	 	{
+ 	 		text+=String(i+1)+" : "+ String(data.hits[i].points)+" : "+(data.hits[i].title).link(data.hits[i].url)+"<br>";
+ 	 	}
+ 	 	$(".mypanel").html(text);
+			});
+	}
+	function search_author()
+	{
+		$(".mypanel").html("Loading...");
+		console.log('getting json')	
+		$.getJSON('http://localhost:3000/search_author', function(data){
+				console.log(data)
+				var text ="";
+ 	 	for(i=0;i<data.hits.length;i++)
+ 	 	{
+ 	 		text+=String(i+1)+" : "+ String(data.hits[i].points)+" : "+(data.hits[i].title).link(data.hits[i].url)+"<br>";
+ 	 	}
+ 	 	$(".mypanel").html(text);
+			});
+	}
+	function showFrontPage()
+	{	
+		
+		$(".mypanel").html("Loading...");
+		console.log('getting json')	
+		$.getJSON('http://localhost:3000/frontpage', function(data){
+				console.log(data)
+				var text ="";
+ 	 	for(i=0;i<data.hits.length;i++)
+ 	 	{
+ 	 		text+=String(i+1)+" : "+ String(data.hits[i].points)+" : "+(data.hits[i].title).link(data.hits[i].url)+"<br>";
+ 	 	}
+ 	 	$(".mypanel").html(text);
+			});
+
+	}
+	function showLastStories()
+	{
+		$(".mypanel").html("Loading...");
+		$.getJSON('http://localhost:3000/laststory', function (data) {
+			console.log(data)
+ 		 var text ="";
+ 		for(i=0;i<data.hits.length;i++)
+ 		{		
+ 			text+=String(i+1)+" : "+ String(data.hits[i].points)+" : "+data.hits[i].created_at+" : "+(data.hits[i].title).link(data.hits[i].url)+"<br>";
+		 }
+ 		$(".mypanel").html(text);
+		});
+	}
+	$(document).ready(function(){
+		
+		$("#search").click(function(){
+			word=$("#search_w").val();
+			$.post("http://localhost:3000/search",{word_value: word},function(data){
+			$(".mypanel").html("Loading...");
+
+			});
+		});
+
+	});
+
+	$(document).ready(function(){
+		
+		$("#search_author").click(function(){
+			author=$("#search_a").val();
+			$.post("http://localhost:3000/search_auth",{word_value: author},function(data){
+			$(".mypanel").html("Loading...");
+
+			});
+		});
+
+	});
+
+
+</script>
+	
+
+
+<style type="text/css">
+	#tfheader{
+		background-color:#c3dfef;
+	}
+	#search{
+		float:center;
+		padding:10px;
+	}
+	.tftextinput{
+		margin: 0;
+		padding: 5px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		border:1px solid #0076a3; border-right:0px;
+		border-top-left-radius: 5px 5px;
+		border-bottom-left-radius: 5px 5px;
+	}
+	.tfbutton {
+		margin: 0;
+		padding: 5px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		outline: none;
+		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
+		color: #ffffff;
+		border: solid 1px #0076a3; border-right:0px;
+		background: #0095cd;
+		background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+		background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+		border-top-right-radius: 5px 5px;
+		border-bottom-right-radius: 5px 5px;
+	}
+	.tfbutton:hover {
+		text-decoration: none;
+		background: #007ead;
+		background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+		background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+	}
+	/* Fixes submit button height problem in Firefox */
+	.tfbutton::-moz-focus-inner {
+	  border: 0;
+	}
+	.tfclear{
+		clear:both;
+	}
+	.mypanel{
+		padding: 10px;
+		background-color:#DAF7A6;
+		color: #030300;
+
+	}
+</style>
+
+
+</head>
+<body>
+	<h1>Web Reader for Hacker News : </h1>
+	
+	<div id="tfheader">
+		<form id="search">
+		        <input type="text" class="tftextinput" id="search_w" name="search" value="Enter word" size="21" maxlength="120">
+		        <input type="text" class="tftextinput" id="search_a" name="author" value="Enter Author Name" size="21" maxlength="120">		        
+		</form>
+		<input type="button" id="search_word" value="Search By Word" onclick="search()">
+		<input type="button" id="search_author" value="Search By Author" onclick="search_author()">
+		<button onclick="showFrontPage()">Front Page</button>
+		<button onclick="showLastStories()">Last Stories</button>
+	<div class="tfclear"></div>
+	</div>
+	<div class ="mypanel"></div>
+	
+</body>
+</html>
